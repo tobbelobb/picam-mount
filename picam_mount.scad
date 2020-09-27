@@ -1,4 +1,43 @@
-use <util.scad>
+module inner_round_corner(r, h, ang=90, back = 0.1){
+  cx = r*(1-cos(ang/2+45));
+  translate([-r*(1-sin(ang/2+45)), -r*(1-sin(ang/2+45)),0])
+  difference(){
+    translate([-back, -back, 0])
+    cube([cx+back, cx+back, h]);
+    translate([r,r,-1])
+      cylinder(r=r, h=h+2);
+  }
+}
+
+module rounded_cube2(v, r){
+  $fs = 1;
+  if(v[2]){
+    union(){
+      translate([r,0,0])           cube([v[0]-2*r, v[1]    , v[2]]);
+      translate([0,r,0])           cube([v[0]    , v[1]-2*r, v[2]]);
+      translate([r,r,0])           cylinder(h=v[2], r=r);
+      translate([v[0]-r,r,0])      cylinder(h=v[2], r=r);
+      translate([v[0]-r,v[1]-r,0]) cylinder(h=v[2], r=r);
+      translate([r,v[1]-r,0])      cylinder(h=v[2], r=r);
+    }
+  } else {
+    union(){
+      translate([r,0])           square([v[0]-2*r, v[1]    ]);
+      translate([0,r])           square([v[0]    , v[1]-2*r]);
+      translate([r,r])           circle(r=r);
+      translate([v[0]-r,r])      circle(r=r);
+      translate([v[0]-r,v[1]-r]) circle(r=r);
+      translate([r,v[1]-r])      circle(r=r);
+    }
+  }
+}
+
+module top_rounded_cube2(v, r){
+  translate([0,v[1],0])
+    rotate([90,0,0])
+      rounded_cube2([v[0], v[2], v[1]], r);
+}
+
 
 $fn=100;
 module snurreskive_plate(){
