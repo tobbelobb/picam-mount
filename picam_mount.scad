@@ -119,10 +119,10 @@ module vippeplate(){
     difference() {
       hull() {
         rotate([90,0,0])
-          cylinder(d=6, h=34, center=true);
-        translate([34-3/2,0,0])
+          cylinder(d=6, h=35, center=true);
+        translate([23,0,0])
           rotate([90,0,0])
-            cylinder(d=6, h=34, center=true);
+            cylinder(d=6, h=35, center=true);
       }
       rotate([90,0,0])
          cylinder(d=3.1, h=100, center=true);
@@ -144,10 +144,10 @@ module vippeplate(){
       translate([31/2+4,0,0]){
         rotate([0,0,90-10])
           rotate([0,90,0])
-            cylinder(d=2.7, h=50);
+            cylinder(d=2.4, h=50);
         rotate([0,0,90+180+10])
           rotate([0,90,0])
-            cylinder(d=2.7, h=50);
+            cylinder(d=2.4, h=50);
       }
     }
 }
