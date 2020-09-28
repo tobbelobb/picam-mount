@@ -61,58 +61,98 @@ module snurreskive_plate_plupp() {
   }
 }
 
-snurreskive();
+//snurreskive();
 module snurreskive() {
   snurreskive_plate();
   snurreskive_plate_plupp();
 }
 
-translate([0,0,14.3-3])
-vippeplate();
+//translate([9, -24/2, -7])
+//  %picam();
+module picam() {
+  difference() {
+    cube([24, 25, 2]);
+    translate([2, 2, -1])
+      cylinder(d=2, h=4);
+    translate([12.5+2, 2, -1])
+      cylinder(d=2, h=4);
+    translate([12.5+2, 25-2, -1])
+      cylinder(d=2, h=4);
+    translate([2, 25-2, -1])
+      cylinder(d=2, h=4);
+  }
+}
+
+module snurreskive2_inner() {
+  cylinder(d1 = 31.5, d2 = 28.5, h=5.1);
+}
+
+
+//translate([(31)/2+3.5,0,-2]) {
+//snurreskive2();
+//translate([-2-12.5/2, -25/2, 9.6])
+//  %picam();
+//}
+module snurreskive2() {
+  difference() {
+    union() {
+      snurreskive2_inner();
+      for(i=[1,-1])
+        for(j=[1,-1])
+          translate([i*12.5/2, j*21/2, 0])
+            cylinder(d=4, h=9.5);
+    }
+    for(i=[1,-1])
+      for(j=[1,-1])
+        translate([i*12.5/2, j*21/2, -0.1]) {
+          cylinder(d=2.1, h=9.7);
+          // M2 nutlocks. Most people won't have M2 screws, so don't bother
+          //cylinder(d=4/cos(30), h=2, $fn=6);
+        }
+  }
+
+}
+
+
+//vippeplate();
 module vippeplate(){
-  rotate([0,atan(1.5/30),0])
     difference() {
       hull() {
         rotate([90,0,0])
-          cylinder(d=6, h=27, center=true);
-        translate([30-3/2,0,0])
+          cylinder(d=6, h=34, center=true);
+        translate([34-3/2,0,0])
           rotate([90,0,0])
-            cylinder(d=3, h=27, center=true);
+            cylinder(d=6, h=34, center=true);
       }
       rotate([90,0,0])
          cylinder(d=3.1, h=100, center=true);
       cube([6.5, 27/2, 7], center=true);
-      translate([31.5/2, 0, 0])
-        translate([0,21/2,0]) {
-          cylinder(d=2.1, h=20, center=true);
-        translate([0,0,-6]) {
-          rotate([0,0,45/2])
-          difference(){
-            rotate([0,0,45])
-              difference() {
-                cylinder(r=21+1.05, h=10);
-                translate([0,0,-1])
-                  cylinder(r=21-1.05, h=12);
-                translate([-25,0,-1])
-                  cube(50);
-                translate([0,-25,-1])
-                  cube(50);
-              }
-            translate([0,-25,-1])
-              cube(50);
+      translate([(31)/2+4,0,-2]) {
+        hull() {
+          snurreskive2_inner();
+          translate([20,0,0]) {
+            snurreskive2_inner();
           }
-          rotate([0,0,-45/2])
-            translate([0,-21, 0])
-              cylinder(d=2.1, h=20);
-          rotate([0,0,45/2])
-            translate([0,-21, 0])
-              cylinder(d=2.1, h=20);
         }
+        hull() {
+          translate([0,0,-2])
+            cylinder(d=28.5, h=6);
+          translate([20,0,-2])
+            cylinder(d=28.5, h=6);
+        }
+      }
+      translate([31/2+4,0,0]){
+        rotate([0,0,90-10])
+          rotate([0,90,0])
+            cylinder(d=2.7, h=50);
+        rotate([0,0,90+180+10])
+          rotate([0,90,0])
+            cylinder(d=2.7, h=50);
       }
     }
 }
 
-base();
+//base();
 module base() {
   difference() {
     translate([0,0,-2])
@@ -137,4 +177,18 @@ module base() {
         rotate([0,90,0])
           cylinder(d=2.7, h=50);
   }
+}
+
+assembly();
+module assembly() {
+  translate([0,0,14.3-3]) {
+    vippeplate();
+    translate([(31)/2+3.5,0,-2]) {
+      snurreskive2();
+      translate([-2-12.5/2, -25/2, 9.6])
+        %picam();
+    }
+  }
+  base();
+  snurreskive();
 }
