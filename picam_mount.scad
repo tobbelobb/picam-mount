@@ -84,7 +84,7 @@ module picam_die(){
     }
 }
 
-!rotate([180,0,0]) lens_hood_legs();
+//!rotate([180,0,0]) lens_hood_legs();
 module lens_hood_legs() {
   difference(){
     translate([-10/2,-height/2,  0])
@@ -251,7 +251,7 @@ module assembly() {
     translate([(31)/2+3.5,0,-2]) {
       snurreskive2();
       translate([-2-12.5/2, -25/2, 9.6])
-        %picam();
+        picam();
     }
   }
   base();
