@@ -67,19 +67,84 @@ module snurreskive() {
   snurreskive_plate_plupp();
 }
 
+width = 23.7;
+height = 25;
+th = 2;
+screw_offs = 2;
+screw_d = 2;
+die_w = 8.34;
+
+
+//!picam_die();
+module picam_die(){
+    translate([0,0,-0.1]) {
+      cylinder(d = 7.18, h=6+0.1);
+      translate([-die_w/2, -die_w/2, 0])
+        cube([die_w, die_w, 3.3+0.1]);
+    }
+}
+
+!rotate([180,0,0]) lens_hood_legs();
+module lens_hood_legs() {
+  difference(){
+    translate([-10/2,-height/2,  0])
+      cube([10,height,  6.7]);
+    cylinder(d = 7.8, h=10);
+    translate([-die_w, -die_w, -0.1])
+      cube([2*die_w, 2*die_w, 3.8]);
+
+    translate([0,height/2-screw_offs,-1])
+      cylinder(d=2.1, h=10);
+    translate([0,-(height/2-screw_offs),-1])
+      cylinder(d=2.1, h=10);
+  }
+}
+
+//!lens_hood();
+module lens_hood() {
+  hood_height = 16;
+  v = 65/2;
+  a = 3.68/2;
+  b = tan(v)*hood_height - a;
+  s = b/a;
+  difference() {
+    union(){
+      translate([-5, -height/2, 0])
+        cube([10,height,  1]);
+      cylinder(d=7.18+2.5, h = hood_height-4);
+    }
+    translate([0,height/2-screw_offs,-1])
+      cylinder(d=2.1, h=10);
+    translate([0,-(height/2-screw_offs),-1])
+      cylinder(d=2.1, h=10);
+    translate([0,0,-2])
+      cylinder(d=7.18, h = hood_height+2);
+    translate([0,0,-1.75])
+      linear_extrude(height=hood_height, scale=s)
+        square([2.76, 3.68], center=true);
+  }
+}
+
 //translate([9, -24/2, -7])
-//  %picam();
+//!picam();
 module picam() {
   difference() {
-    cube([24, 25, 2]);
-    translate([2, 2, -1])
-      cylinder(d=2, h=4);
-    translate([12.5+2, 2, -1])
-      cylinder(d=2, h=4);
-    translate([12.5+2, 25-2, -1])
-      cylinder(d=2, h=4);
-    translate([2, 25-2, -1])
-      cylinder(d=2, h=4);
+    cube([width, height, th]);
+    translate([screw_offs, screw_offs, -1])
+      cylinder(d=screw_d, h=4);
+    translate([12.5+screw_offs, screw_offs, -1])
+      cylinder(d=screw_d, h=4);
+    translate([12.5+screw_offs, 25-screw_offs, -1])
+      cylinder(d=screw_d, h=4);
+    translate([screw_offs, 25-screw_offs, -1])
+      cylinder(d=screw_d, h=4);
+  }
+  translate([12.5+screw_offs, height/2, th-0.1]) {
+  color("grey")
+    picam_die();
+    lens_hood_legs();
+    translate([0,0,7])
+      lens_hood();
   }
 }
 
